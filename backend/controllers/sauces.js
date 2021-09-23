@@ -1,5 +1,6 @@
 const Sauce = require('../models/Sauce');
 const fs = require('fs');
+const { userInfo } = require('os');
 
 exports.createSauce = (req, res, next) => {
     const sauceObject = JSON.parse(req.body.sauce);
@@ -58,6 +59,41 @@ exports.getSauce = (req, res, next) => {
 
 exports.getAllSauces = (req, res, next) => {
     Sauce.find()
-        .then(sauces => res.status(200).json(sauces))
+        .then(sauces => {
+            console.log(sauces);
+            res.status(200).json(sauces)
+        })
         .catch(error => res.status(400).json({error}));
+}
+
+exports.react = (req, res, next) => {
+    Sauce.findOne({ _id: req.params.id })
+    .then(sauce => {
+        const userId = req.body.userId;
+        const userWantsToLike = (req.body.like == 1);
+        const userWantsToUndo = (req.body.like == 0);
+        const userWantsToDislike = (req.body.like == -1);
+        if(userWantsToUndo) {
+            if(sauce.usersLiked.includes(userId)) {
+                let userIndex = sauce.usersLiked.indexOf(userId);
+                sauce.usersLiked.splice(userIndex);
+            }
+            if(sauce.usersDisliked.includes(userId)) {
+                let userIndex = sauce.usersDisliked.indexOf(userId);
+                sauce.usersDisliked.splice(userIndex);
+            }
+        }
+        if(userWantsToLike) {
+            sauce.usersLiked.push(userId);
+        };
+        if(userWantsToDislike) {
+            sauce.usersDisliked.push(userId);
+        };
+        sauce.likes = sauce.usersLiked.length;
+        sauce.dislikes = sauce.usersDisliked.length;
+        sauce.save();
+        return sauce;
+    })
+    .then(sauce => res.status(200).json(sauce))
+    .catch(error => res.status(500).json({ error }));
 }
