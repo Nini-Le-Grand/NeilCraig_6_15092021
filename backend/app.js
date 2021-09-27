@@ -1,17 +1,20 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const sauceRoutes = require('./routes/sauces');
 const userRoutes = require('./routes/user');
 const path = require('path');
+const helmet = require('helmet');
 
-mongoose.connect('mongodb+srv://Project6_OCR:JJnQrDdGdtesyaGu@cluster0.adhmm.mongodb.net/Cluster0?retryWrites=true&w=majority',
+require('dotenv').config();
+
+mongoose.connect(`mongodb+srv://Nini_Le_Grand:${process.env.DB_PASSWORD}@project6.grut9.mongodb.net/${process.env.DB_DATABASE}?retryWrites=true&w=majority`,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 
 const app = express();
+app.use(helmet());
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -20,7 +23,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(bodyParser.json());
+app.use(express.json());
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);

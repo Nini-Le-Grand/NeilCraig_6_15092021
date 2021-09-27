@@ -1,6 +1,5 @@
 const Sauce = require('../models/Sauce');
 const fs = require('fs');
-const { userInfo } = require('os');
 
 exports.createSauce = (req, res, next) => {
     const sauceObject = JSON.parse(req.body.sauce);
@@ -60,7 +59,6 @@ exports.getSauce = (req, res, next) => {
 exports.getAllSauces = (req, res, next) => {
     Sauce.find()
         .then(sauces => {
-            console.log(sauces);
             res.status(200).json(sauces)
         })
         .catch(error => res.status(400).json({error}));
