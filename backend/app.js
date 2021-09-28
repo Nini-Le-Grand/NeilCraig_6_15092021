@@ -7,7 +7,7 @@ const helmet = require('helmet');
 
 require('dotenv').config();
 
-mongoose.connect(`mongodb+srv://Nini_Le_Grand:${process.env.DB_PASSWORD}@project6.grut9.mongodb.net/${process.env.DB_DATABASE}?retryWrites=true&w=majority`,
+mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/${process.env.DB_DATABASE}?retryWrites=true&w=majority`,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
