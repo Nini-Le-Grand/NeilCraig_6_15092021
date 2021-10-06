@@ -1,3 +1,5 @@
+// Afin de rendre l'application opérationnelle, veuillez lier l'application à votre base de données MongoDB.
+
 const express = require('express');
 const mongoose = require('mongoose');
 const sauceRoutes = require('./routes/sauces');
